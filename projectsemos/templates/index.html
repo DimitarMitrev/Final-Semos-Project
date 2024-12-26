@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Spending App</title>
+    <style>
+        /* Background styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: #fff;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #ffe0b2;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+            transform: scale(1.02);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ffe3e1;
+            border: 1px solid #ffa07a;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            display: none;
+            color: #333;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-10px);
+            }
+            50% {
+                transform: translateX(10px);
+            }
+            75% {
+                transform: translateX(-10px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Spending App</h1>
+        <button class="button" onclick="fetchUserSpending()">Get User's Total Spending</button>
+        <button class="button" onclick="fetchHighSpenders()">Get High Spenders</button>
+        <button class="button" onclick="fetchAverageSpending()">Get Average Spending by Age</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        async function fetchUserSpending() {
+            const userId = prompt("Enter the User ID to get total spending:");
+            if (userId) {
+                try {
+                    const response = await fetch(`/total_spent/${userId}`);
+                    if (!response.ok) {
+                        throw new Error(`User with ID ${userId} not found.`);
+                    }
+                    const data = await response.json();
+                    displayResult(data);
+                } catch (error) {
+                    displayError(error);
+                }
+            } else {
+                displayError("User ID is required.");
+            }
+        }
+
+        async function fetchHighSpenders() {
+            try {
+                const response = await fetch('/high_spenders');
+                const data = await response.json();
+                displayResult(data);
+            } catch (error) {
+                displayError(error);
+            }
+        }
+
+        async function fetchAverageSpending() {
+            try {
+                const response = await fetch('/average_spending_by_age');
+                const data = await response.json();
+                displayResult(data);
+            } catch (error) {
+                displayError(error);
+            }
+        }
+
+        function displayResult(data) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            resultDiv.style.display = 'block';
+            resultDiv.classList.remove('shake');
+        }
+
+        function displayError(error) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<pre>${error}</pre>`;
+            resultDiv.style.display = 'block';
+            resultDiv.classList.add('shake');
+        }
+    </script>
+</body>
+</html>
