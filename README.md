@@ -1,1 +1,2 @@
 # Final-Semos-Project
+# This project was done as a final test in a course I had taken from the Semos academy. From a given database I calculate the users average spending by age, highest spenders, and also i can write new spending amounts to whichever user of my choosing with using Postman. Also includes unit test, API telegram bot that sends a message to telegram with average spenders by age. It also has some JS animations, HTML and CSS. 
